@@ -1,23 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import globalStyles from "../styles";
 
-const FormularioGasto = ({ setModal, hadleGasto }) => {
+const FormularioGasto = ({ setModal, hadleGasto, setGasto, gasto }) => {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [categoria, setCategoria] = useState("");
+  const [id, setId] = useState("");
+
+  useEffect(() => {
+    if (gasto?.nombre) {
+      setNombre(gasto.nombre);
+      setCantidad(gasto.cantidad);
+      setCategoria(gasto.categoria);
+      setId(gasto.id);
+    }
+  }, [gasto]);
 
   return (
     <View style={styles.container}>
       <View>
-        <Pressable onPress={() => setModal(false)} style={styles.btnCancelar}>
+        <Pressable
+          onPress={() => {
+            setModal(false);
+            setGasto({});
+          }}
+          style={styles.btnCancelar}
+        >
           <Text style={styles.btnCancelarText}>Cancelar</Text>
         </Pressable>
       </View>
 
       <View style={styles.formulario}>
-        <Text style={styles.titulo}>Nuevo Gasto</Text>
+        <Text style={styles.titulo}>
+          {gasto?.nombre ? "Editar Gasto" : "Nuevo Gasto"}
+        </Text>
 
         <View style={styles.campo}>
           <Text style={styles.label}>Nombre Gasto</Text>
@@ -62,7 +80,9 @@ const FormularioGasto = ({ setModal, hadleGasto }) => {
           style={styles.submitBtn}
           onPress={() => hadleGasto({ nombre, cantidad, categoria })}
         >
-          <Text style={styles.submitBtnText}>Agregar Gasto</Text>
+          <Text style={styles.submitBtnText}>
+            {gasto?.nombre ? "Guardar Cambios Gasto" : "Agregar Gasto"}
+          </Text>
         </Pressable>
       </View>
     </View>
