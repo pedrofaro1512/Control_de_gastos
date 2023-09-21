@@ -20,6 +20,7 @@ export default function App() {
   const [presupuesto, setPresupuesto] = useState(0);
   const [gastos, setGastos] = useState([]);
   const [modal, setModal] = useState(false);
+  const [gasto, setGasto] = useState({});
 
   const handleNuevoPresupuesto = (presupuesto) => {
     if (Number(presupuesto) > 0) {
@@ -35,6 +36,7 @@ export default function App() {
       return;
     }
     gasto.id = generarId();
+    gasto.fecha = Date.now();
     console.log(gasto);
     setGastos([...gastos, gasto]);
 
@@ -58,12 +60,23 @@ export default function App() {
           )}
         </View>
 
-        {isValidPresupuesto && <ListadoGastos gastos={gastos} />}
+        {isValidPresupuesto && (
+          <ListadoGastos
+            gastos={gastos}
+            setModal={setModal}
+            setGasto={setGasto}
+          />
+        )}
       </ScrollView>
 
       {modal && (
         <Modal animationType="slide" visible={modal}>
-          <FormularioGasto setModal={setModal} hadleGasto={hadleGasto} />
+          <FormularioGasto
+            setModal={setModal}
+            hadleGasto={hadleGasto}
+            gasto={gasto}
+            setGasto={setGasto}
+          />
         </Modal>
       )}
 
